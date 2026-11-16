@@ -44,6 +44,29 @@ public static class Cizim
         }
     }
 
+    // Verilen merkezde, normale dik düzlemde çember çizer.
+    public static void Cember(Vector3 merkez, Vector3 normal, float yaricap, Color renk, int parca = 48)
+    {
+        Gizmos.color = renk;
+        if (normal.sqrMagnitude < 0.0001f) normal = Vector3.up;
+        normal.Normalize();
+
+        // Çember düzlemini oluşturan iki dik yön bulunur.
+        Vector3 a = Vector3.Cross(normal, Vector3.up);
+        if (a.sqrMagnitude < 0.0001f) a = Vector3.Cross(normal, Vector3.right);
+        a.Normalize();
+        Vector3 b = Vector3.Cross(normal, a);
+
+        Vector3 onceki = merkez + a * yaricap;
+        for (int i = 1; i <= parca; i++)
+        {
+            float aci = i * Mathf.PI * 2f / parca;
+            Vector3 nokta = merkez + (a * Mathf.Cos(aci) + b * Mathf.Sin(aci)) * yaricap;
+            Gizmos.DrawLine(onceki, nokta);
+            onceki = nokta;
+        }
+    }
+
     // Verilen dünya konumuna yazı yazar. Yalnızca editörde çalışır.
     public static void Yazi(Vector3 konum, string metin, Color renk)
     {
